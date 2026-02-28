@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Anggota - BUMA</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: #f4f6f9;
+        }
+        .sidebar {
+            min-height: 100vh;
+            background: linear-gradient(180deg, #2c3e50 0%, #1a252f 100%);
+            color: #fff;
+            transition: all 0.3s;
+        }
+        .sidebar .nav-link {
+            color: #b0c4de;
+            padding: 12px 20px;
+            font-weight: 500;
+            border-radius: 0 20px 20px 0;
+            margin-right: 10px;
+            transition: 0.3s;
+        }
+        .sidebar .nav-link:hover {
+            background-color: #3a4b5c;
+            color: #fff;
+            padding-left: 30px;
+        }
+        .sidebar .nav-link.active {
+            background-color: #007bff;
+            color: white;
+        }
+        .sidebar .nav-link i {
+            margin-right: 10px;
+            width: 24px;
+            text-align: center;
+        }
+        .sidebar h5 {
+            color: #ecf0f1;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        .sidebar hr {
+            border-top: 1px solid #3a4b5c;
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+        .btn-logout {
+            background-color: transparent;
+            border: none;
+            color: #ff6b6b;
+            font-weight: 500;
+            padding: 12px 20px;
+            width: 100%;
+            text-align: left;
+        }
+        .btn-logout:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: -250px;
+                z-index: 1000;
+                width: 250px !important;
+            }
+            .sidebar.show {
+                left: 0;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .toggle-btn {
+                display: block;
+            }
+        }
+        .toggle-btn {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1100;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+        #loadingOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.8);
+            z-index: 2000;
+            text-align: center;
+            padding-top: 20%;
+        }
+        .table-responsive {
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .foto-thumb {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .preview-container img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Tombol toggle untuk mobile -->
+    <button class="toggle-btn" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="p-3">
+                <h5><i class="fas fa-hard-hat me-2"></i>BUMA Admin</h5>
+                <hr>
+            </div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a href="dashboard.html" class="nav-link">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="data-anggota.html" class="nav-link active">
+                        <i class="fas fa-users"></i> Data Anggota
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="peta-sebaran.html" class="nav-link">
+                        <i class="fas fa-map-marked-alt"></i> Peta Sebaran
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="pengguna.html" class="nav-link">
+                        <i class="fas fa-user-cog"></i> Pengguna
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="pengaturan.html" class="nav-link">
+                        <i class="fas fa-cogs"></i> Pengaturan
+                    </a>
+                </li>
+                <!-- Menu Kembali ke Index -->
+                <li class="nav-item">
+                    <a href="../index.html" class="nav-link">
+                        <i class="fas fa-home"></i> Kembali ke Index
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <button onclick="if(confirm('Yakin ingin logout?')) logout()" class="btn-logout">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <h2><i class="fas fa-users me-2"></i>Data Usaha Anggota</h2>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalUsaha" onclick="resetForm()">
+                <i class="fas fa-plus"></i> Tambah Usaha
+            </button>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="tabelUsaha">
+                    <thead class="table-light">
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Usaha</th>
+                            <th>Pemilik</th>
+                            <th>Alamat</th>
+                            <th>Kategori</th>
+                            <th>Foto</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyUsaha">
+                        <!-- Diisi oleh JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Tambah/Edit Usaha -->
+    <div class="modal fade" id="modalUsaha" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Tambah Usaha</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formUsaha" enctype="multipart/form-data">
+                        <input type="hidden" id="usahaId">
+                        <div class="mb-3">
+                            <label for="userId" class="form-label">Pemilik (User ID)</label>
+                            <select class="form-control" id="userId" required>
+                                <option value="">Pilih User</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="namaUsaha" class="form-label">Nama Usaha</label>
+                            <input type="text" class="form-control" id="namaUsaha" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="pemilik" class="form-label">Nama Pemilik</label>
+                            <input type="text" class="form-control" id="pemilik" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="alamat" class="form-label">Alamat</label>
+                            <textarea class="form-control" id="alamat" rows="2" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="kategori" class="form-label">Kategori</label>
+                            <input type="text" class="form-control" id="kategori">
+                        </div>
+                        <div class="mb-3">
+                            <label for="latitude" class="form-label">Latitude (opsional)</label>
+                            <input type="text" class="form-control" id="latitude">
+                        </div>
+                        <div class="mb-3">
+                            <label for="longitude" class="form-label">Longitude (opsional)</label>
+                            <input type="text" class="form-control" id="longitude">
+                        </div>
+                        <!-- Upload Foto -->
+                        <div class="mb-3">
+                            <label for="foto" class="form-label">Foto Produk (maksimal 5)</label>
+                            <input type="file" class="form-control" id="foto" name="foto" accept="image/*" multiple>
+                            <div id="fotoPreview" class="mt-2 d-flex flex-wrap gap-2 preview-container"></div>
+                            <div id="existingFoto" class="mt-2 d-flex flex-wrap gap-2 preview-container"></div>
+                            <small class="text-muted">Pilih 1-5 foto. Saat edit, foto lama akan diganti dengan yang baru jika Anda memilih file baru.</small>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" onclick="simpanUsaha()">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Embedded JavaScript (Config, Auth, API, Data Anggota logic) -->
+    <script>
+        // ==================== Konfigurasi ====================
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyilznepIEts9s3n2dv37QGw6_VkEM0Ys5x4JunBqUsRPejdOfjT8AwDfKK1D8ZGsxZMA/exec'; // Ganti dengan URL Apps Script Anda
+
+        // ==================== Auth Functions ====================
+        async function login(email, password) {
+            try {
+                const response = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'login', email, password })
+                });
+                const result = await response.json();
+                if (result.status === 'success') {
+                    localStorage.setItem('token', result.data.token);
+                    localStorage.setItem('user', JSON.stringify(result.data));
+                    if (result.data.role === 'admin') {
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        window.location.href = '../member/profil.html';
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                return false;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '../login.html';
+        }
+
+        function cekAuth(roleRequired = null) {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            if (!token) {
+                window.location.href = '../login.html';
+                return false;
+            }
+            if (roleRequired && user.role !== roleRequired) {
+                alert('Akses ditolak');
+                window.location.href = 'index.html';
+                return false;
+            }
+            return true;
+        }
+
+        function getUser() {
+            return JSON.parse(localStorage.getItem('user') || '{}');
+        }
+
+        // ==================== API Functions (JSON) ====================
+        async function callApi(action, data = {}) {
+            const token = localStorage.getItem('token');
+            const payload = { action, token, ...data };
+            try {
+                const response = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                return await response.json();
+            } catch (error) {
+                console.error('API call error:', error);
+                return { status: 'error', message: 'Gagal terhubung ke server' };
+            }
+        }
+
+        async function getDataUsaha() {
+            return callApi('getDataUsaha');
+        }
+
+        async function deleteDataUsaha(id) {
+            return callApi('deleteDataUsaha', { id });
+        }
+
+        async function getUsers() {
+            return callApi('getUsers');
+        }
+
+        // ==================== Fungsi Upload (Multipart) ====================
+        async function uploadUsaha(formData) {
+            showLoading(true);
+            try {
+                const response = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    body: formData,
+                    mode: 'no-cors'
+                });
+                // Dengan no-cors, response tidak bisa dibaca, anggap sukses
+                return { status: 'success' };
+            } catch (error) {
+                console.error('Upload error:', error);
+                return { status: 'error', message: 'Gagal terhubung ke server' };
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // ==================== Halaman Data Anggota ====================
+        if (!cekAuth('admin')) {}
+
+        // Toggle sidebar untuk mobile
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('show');
+        });
+
+        let daftarUsaha = [];
+        let daftarUser = [];
+
+        async function loadData() {
+            showLoading(true);
+            try {
+                const usahaRes = await getDataUsaha();
+                if (usahaRes.status === 'success') {
+                    daftarUsaha = usahaRes.data;
+                    renderTabel();
+                } else {
+                    alert('Gagal memuat data usaha');
+                }
+
+                const userRes = await getUsers();
+                if (userRes.status === 'success') {
+                    daftarUser = userRes.data;
+                    populateUserSelect();
+                } else {
+                    alert('Gagal memuat data pengguna');
+                }
+            } catch (error) {
+                console.error('Error loading data:', error);
+                alert('Terjadi kesalahan saat memuat data');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function renderTabel() {
+            const tbody = document.getElementById('tbodyUsaha');
+            tbody.innerHTML = '';
+            daftarUsaha.forEach((item, index) => {
+                let fotoThumb = '';
+                if (item.foto) {
+                    try {
+                        const fotoIds = JSON.parse(item.foto);
+                        if (fotoIds.length > 0) {
+                            fotoThumb = `<img src="https://drive.google.com/thumbnail?id=${fotoIds[0]}" class="foto-thumb" alt="foto">`;
+                        }
+                    } catch (e) {}
+                }
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${item.namaUsaha || ''}</td>
+                    <td>${item.pemilik || ''}</td>
+                    <td>${item.alamat || ''}</td>
+                    <td>${item.kategori || ''}</td>
+                    <td>${fotoThumb}</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" onclick="editUsaha('${item.id}')"><i class="fas fa-edit"></i> Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="hapusUsaha('${item.id}')"><i class="fas fa-trash"></i> Hapus</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function populateUserSelect() {
+            const select = document.getElementById('userId');
+            select.innerHTML = '<option value="">Pilih User</option>';
+            daftarUser.forEach(user => {
+                select.innerHTML += `<option value="${user.id}">${user.nama} (${user.email})</option>`;
+            });
+        }
+
+        function resetForm() {
+            document.getElementById('usahaId').value = '';
+            document.getElementById('userId').value = '';
+            document.getElementById('namaUsaha').value = '';
+            document.getElementById('pemilik').value = '';
+            document.getElementById('alamat').value = '';
+            document.getElementById('kategori').value = '';
+            document.getElementById('latitude').value = '';
+            document.getElementById('longitude').value = '';
+            document.getElementById('foto').value = '';
+            document.getElementById('fotoPreview').innerHTML = '';
+            document.getElementById('existingFoto').innerHTML = '';
+            document.getElementById('modalTitle').innerText = 'Tambah Usaha';
+        }
+
+        function displayExistingFoto(fotoIds) {
+            const container = document.getElementById('existingFoto');
+            container.innerHTML = '';
+            if (!fotoIds || fotoIds.length === 0) return;
+            fotoIds.forEach(id => {
+                const img = document.createElement('img');
+                img.src = `https://drive.google.com/thumbnail?id=${id}`;
+                img.style.width = '80px';
+                img.style.height = '80px';
+                img.style.objectFit = 'cover';
+                img.className = 'border rounded me-2 mb-2';
+                container.appendChild(img);
+            });
+        }
+
+        function editUsaha(id) {
+            const item = daftarUsaha.find(u => u.id === id);
+            if (item) {
+                document.getElementById('usahaId').value = item.id;
+                document.getElementById('userId').value = item.userId || '';
+                document.getElementById('namaUsaha').value = item.namaUsaha || '';
+                document.getElementById('pemilik').value = item.pemilik || '';
+                document.getElementById('alamat').value = item.alamat || '';
+                document.getElementById('kategori').value = item.kategori || '';
+                document.getElementById('latitude').value = item.latitude || '';
+                document.getElementById('longitude').value = item.longitude || '';
+                
+                // Tampilkan foto lama
+                let fotoIds = [];
+                if (item.foto) {
+                    try {
+                        fotoIds = JSON.parse(item.foto);
+                    } catch (e) {}
+                }
+                displayExistingFoto(fotoIds);
+                
+                document.getElementById('modalTitle').innerText = 'Edit Usaha';
+                new bootstrap.Modal(document.getElementById('modalUsaha')).show();
+            }
+        }
+
+        // Preview foto baru yang dipilih
+        document.getElementById('foto').addEventListener('change', function(e) {
+            const files = e.target.files;
+            const preview = document.getElementById('fotoPreview');
+            preview.innerHTML = '';
+            if (files.length > 5) {
+                alert('Maksimal 5 foto');
+                this.value = '';
+                return;
+            }
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                if (file.size > 2 * 1024 * 1024) {
+                    alert(`File ${file.name} terlalu besar (maks 2MB)`);
+                    this.value = '';
+                    preview.innerHTML = '';
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    const img = document.createElement('img');
+                    img.src = ev.target.result;
+                    img.style.width = '80px';
+                    img.style.height = '80px';
+                    img.style.objectFit = 'cover';
+                    img.className = 'border rounded me-2 mb-2';
+                    preview.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        async function simpanUsaha() {
+            const id = document.getElementById('usahaId').value;
+            const formData = new FormData();
+            formData.append('token', localStorage.getItem('token'));
+            formData.append('action', id ? 'updateDataUsaha' : 'addDataUsaha');
+            if (id) formData.append('id', id);
+            formData.append('userId', document.getElementById('userId').value);
+            formData.append('namaUsaha', document.getElementById('namaUsaha').value);
+            formData.append('pemilik', document.getElementById('pemilik').value);
+            formData.append('alamat', document.getElementById('alamat').value);
+            formData.append('kategori', document.getElementById('kategori').value);
+            formData.append('latitude', document.getElementById('latitude').value);
+            formData.append('longitude', document.getElementById('longitude').value);
+
+            const fotoInput = document.getElementById('foto');
+            for (let i = 0; i < fotoInput.files.length; i++) {
+                formData.append('foto', fotoInput.files[i]);
+            }
+
+            // Validasi minimal 1 foto untuk tambah baru
+            if (fotoInput.files.length === 0 && !id) {
+                alert('Minimal 1 foto harus diunggah');
+                return;
+            }
+
+            const result = await uploadUsaha(formData);
+            if (result.status === 'success') {
+                alert('Data tersimpan');
+                bootstrap.Modal.getInstance(document.getElementById('modalUsaha')).hide();
+                loadData();
+            } else {
+                alert('Gagal: ' + result.message);
+            }
+        }
+
+        async function hapusUsaha(id) {
+            if (confirm('Yakin hapus data ini?')) {
+                const result = await deleteDataUsaha(id);
+                if (result.status === 'success') {
+                    alert('Data dihapus');
+                    loadData();
+                } else {
+                    alert('Gagal: ' + result.message);
+                }
+            }
+        }
+
+        function showLoading(show) {
+            document.getElementById('loadingOverlay').style.display = show ? 'block' : 'none';
+        }
+
+        loadData();
+    </script>
+</body>
+</html>
