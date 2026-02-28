@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Usaha - BUMA Bantul</title>
+    <!-- SEO Meta -->
+    <meta name="description" content="Daftarkan usaha Anda di BUMA Bantul secara gratis. Isi formulir, unggah foto produk, dan tandai lokasi usaha di peta.">
+    <!-- Bootstrap 5 + Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- AOS (Animate on Scroll) -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">
+                <img src="assets/logo.png" alt="BUMA Bantul" height="40" class="d-inline-block align-text-top me-2">
+                BUMA Bantul
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#tentang">Tentang</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#fitur">Fitur</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#usaha">Usaha</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#testimoni">Testimoni</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#faq">FAQ</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#kontak">Kontak</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="daftar-usaha.html">Daftar Usaha</a></li>
+                    
+                    <!-- Tampilan jika BELUM login -->
+                    <li class="nav-item ms-lg-2 mt-2 mt-lg-0" id="navLogin">
+                        <a class="btn btn-primary" href="login.html"><i class="bi bi-box-arrow-in-right"></i> Login</a>
+                    </li>
+
+                    <!-- Tampilan jika SUDAH login (awalnya disembunyikan) -->
+                    <li class="nav-item dropdown" id="navUser" style="display: none;">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle"></i> <span id="userName">User</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="#" id="dashboardLink">Dashboard</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero kecil -->
+    <section class="hero py-4" style="min-height: auto;">
+        <div class="container py-4">
+            <h1 class="display-4 fw-bold text-white" data-aos="fade-down">Pendataan Usaha Anggota Ansor</h1>
+            <p class="lead text-white" data-aos="fade-down" data-aos-delay="100">Isi formulir berikut untuk mendaftarkan usaha Anda. Gratis!</p>
+        </div>
+    </section>
+
+    <!-- Formulir Pendaftaran Usaha -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-sm p-4" data-aos="fade-up">
+                        <form id="registerForm" enctype="multipart/form-data">
+                            <input type="hidden" name="action" value="register">
+
+                            <div class="mb-3">
+                                <label for="namaLengkap" class="form-label">Nama Lengkap (sesuai KTP) *</label>
+                                <input type="text" class="form-control" id="namaLengkap" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="namaUsaha" class="form-label">Nama Usaha *</label>
+                                <input type="text" class="form-control" id="namaUsaha" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="kategori" class="form-label">Kategori Usaha *</label>
+                                <select class="form-select" id="kategori" required>
+                                    <option value="">Pilih Kategori</option>
+                                    <option value="Kuliner">Kuliner</option>
+                                    <option value="Fashion">Fashion</option>
+                                    <option value="Kerajinan">Kerajinan</option>
+                                    <option value="Pertanian">Pertanian</option>
+                                    <option value="Jasa">Jasa</option>
+                                    <option value="Lainnya">Lainnya</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="alamat" class="form-label">Alamat Usaha *</label>
+                                <textarea class="form-control" id="alamat" rows="2" required></textarea>
+                            </div>
+
+                            <!-- FITUR TAGGING LOKASI DENGAN OPENSTREETMAP + GPS -->
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Lokasi Usaha (klik pada peta atau gunakan GPS)</label>
+                                <div id="map" style="height: 300px; width: 100%; border-radius: 8px; border: 1px solid #ccc;"></div>
+                                <div class="row mt-2">
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" id="latitude" placeholder="Latitude" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" id="longitude" placeholder="Longitude" readonly>
+                                    </div>
+                                </div>
+                                <div class="mt-2 d-flex gap-2">
+                                    <button type="button" class="btn btn-outline-primary btn-sm" id="getLocationBtn">
+                                        <i class="bi bi-crosshair"></i> Dapatkan Lokasi Saya
+                                    </button>
+                                    <small class="text-muted align-self-center">Klik tombol untuk menggunakan GPS, atau klik peta untuk menandai manual.</small>
+                                </div>
+                            </div>
+
+                            <!-- UPLOAD FOTO PRODUK -->
+                            <div class="mb-3">
+                                <label for="foto" class="form-label">Foto Produk (minimal 1, maksimal 5) *</label>
+                                <input type="file" class="form-control" id="foto" name="foto" accept="image/*" multiple required>
+                                <div id="fotoPreview" class="mt-2 d-flex flex-wrap gap-2"></div>
+                                <small class="text-muted">Pilih 1-5 foto. Ukuran maks 2MB per foto.</small>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="noHp" class="form-label">No. HP / WhatsApp *</label>
+                                    <input type="tel" class="form-control" id="noHp" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="email">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="deskripsi" class="form-label">Deskripsi Singkat Usaha</label>
+                                <textarea class="form-control" id="deskripsi" rows="3"></textarea>
+                            </div>
+
+                            <!-- CAPTCHA sederhana -->
+                            <div class="mb-3">
+                                <label class="form-label">Verifikasi *</label>
+                                <div class="row g-2 align-items-center">
+                                    <div class="col-auto">
+                                        <span id="captchaQuestion" class="captcha-box d-inline-block px-4 py-2 bg-white border rounded-3 fw-bold"></span>
+                                    </div>
+                                    <div class="col">
+                                        <input type="text" class="form-control" id="captchaAnswer" placeholder="Jawaban" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100"><i class="bi bi-send"></i> Daftarkan Usaha</button>
+                        </form>
+                        <div id="registerAlert" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating FAQ Button -->
+    <div class="faq-float">
+        <button class="btn btn-primary rounded-circle shadow-lg" id="faqToggle" style="width: 60px; height: 60px; font-size: 24px;">
+            ?
+        </button>
+        <div class="faq-panel card" id="faqPanel">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <span class="fw-bold">Tanya Jawab</span>
+                <button type="button" class="btn-close btn-close-white" id="closeFaq" aria-label="Tutup"></button>
+            </div>
+            <div class="card-body p-0">
+                <div class="accordion accordion-flush" id="faqFloatAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#floatFaq1">
+                                Apa itu BUMA?
+                            </button>
+                        </h2>
+                        <div id="floatFaq1" class="accordion-collapse collapse" data-bs-parent="#faqFloatAccordion">
+                            <div class="accordion-body">BUMA adalah Badan Usaha Milik Ansor, wadah pendataan dan pengembangan usaha anggota Ansor di Kabupaten Bantul.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#floatFaq2">
+                                Siapa yang dapat mendaftar?
+                            </button>
+                        </h2>
+                        <div id="floatFaq2" class="accordion-collapse collapse" data-bs-parent="#faqFloatAccordion">
+                            <div class="accordion-body">Seluruh anggota Ansor yang memiliki usaha di wilayah Kabupaten Bantul. Jika belum menjadi anggota, silakan hubungi PC Ansor setempat.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#floatFaq3">
+                                Cara mendaftar?
+                            </button>
+                        </h2>
+                        <div id="floatFaq3" class="accordion-collapse collapse" data-bs-parent="#faqFloatAccordion">
+                            <div class="accordion-body">Isi formulir di halaman ini, lengkapi data, unggah foto produk, dan klik pada peta atau gunakan tombol GPS untuk menandai lokasi usaha. Setelah itu klik "Daftarkan Usaha".</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#floatFaq4">
+                                Ada biaya?
+                            </button>
+                        </h2>
+                        <div id="floatFaq4" class="accordion-collapse collapse" data-bs-parent="#faqFloatAccordion">
+                            <div class="accordion-body">Tidak ada biaya. Pendaftaran gratis untuk anggota Ansor.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white pt-5 pb-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <img src="assets/logo.png" alt="BUMA" height="50" class="mb-3">
+                    <p>Badan Usaha Milik Ansor Kabupaten Bantul. Memberdayakan ekonomi anggota menuju kemandirian.</p>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h5>Link Cepat</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="index.html#tentang" class="text-white-50 text-decoration-none">Tentang</a></li>
+                        <li><a href="index.html#fitur" class="text-white-50 text-decoration-none">Fitur</a></li>
+                        <li><a href="index.html#usaha" class="text-white-50 text-decoration-none">Usaha</a></li>
+                        <li><a href="index.html#kontak" class="text-white-50 text-decoration-none">Kontak</a></li>
+                        <li><a href="daftar-usaha.html" class="text-white-50 text-decoration-none">Daftar Usaha</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5>Kontak</h5>
+                    <p class="text-white-50"><i class="bi bi-geo-alt"></i> Jl. Parangtritis No.123, Bantul</p>
+                    <p class="text-white-50"><i class="bi bi-envelope"></i> buma@ansor-bantul.or.id</p>
+                    <p class="text-white-50"><i class="bi bi-whatsapp"></i> 0812-3456-7890</p>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5>Media Sosial</h5>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white-50 fs-4"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-white-50 fs-4"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="text-white-50 fs-4"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="text-white-50">
+            <div class="text-center text-white-50">
+                &copy; 2025 BUMA Bantul. All rights reserved. Dikembangkan oleh <a href="#" class="text-white">PC Ansor Bantul</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Config (berisi APPS_SCRIPT_URL) -->
+    <script src="js/config.js"></script>
+    <!-- Auth Functions (logout, getUser, dll) -->
+    <script src="js/auth.js"></script>
+    <script>
+        // Inisialisasi AOS
+        AOS.init({ duration: 800, once: true });
+
+        // Floating FAQ logic
+        document.addEventListener('DOMContentLoaded', function() {
+            const faqToggle = document.getElementById('faqToggle');
+            const faqPanel = document.getElementById('faqPanel');
+            const closeFaq = document.getElementById('closeFaq');
+
+            if (faqToggle) {
+                faqToggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    faqPanel.style.display = faqPanel.style.display === 'block' ? 'none' : 'block';
+                });
+
+                closeFaq.addEventListener('click', function() {
+                    faqPanel.style.display = 'none';
+                });
+
+                document.addEventListener('click', function(event) {
+                    if (!faqPanel.contains(event.target) && !faqToggle.contains(event.target)) {
+                        faqPanel.style.display = 'none';
+                    }
+                });
+            }
+        });
+
+        // ===== INISIALISASI PETA =====
+        var map = L.map('map').setView([-7.87, 110.35], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var marker;
+        map.on('click', function(e) {
+            if (marker) {
+                marker.setLatLng(e.latlng);
+            } else {
+                marker = L.marker(e.latlng).addTo(map);
+            }
+            document.getElementById('latitude').value = e.latlng.lat.toFixed(6);
+            document.getElementById('longitude').value = e.latlng.lng.toFixed(6);
+        });
+
+        // ===== FITUR GPS =====
+        document.getElementById('getLocationBtn').addEventListener('click', function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var lat = position.coords.latitude;
+                    var lng = position.coords.longitude;
+                    
+                    document.getElementById('latitude').value = lat.toFixed(6);
+                    document.getElementById('longitude').value = lng.toFixed(6);
+                    
+                    map.setView([lat, lng], 15);
+                    
+                    if (marker) {
+                        marker.setLatLng([lat, lng]);
+                    } else {
+                        marker = L.marker([lat, lng]).addTo(map);
+                    }
+                }, function(error) {
+                    let pesan = 'Gagal mendapatkan lokasi: ';
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            pesan += 'Izin lokasi ditolak.';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            pesan += 'Informasi lokasi tidak tersedia.';
+                            break;
+                        case error.TIMEOUT:
+                            pesan += 'Waktu permintaan lokasi habis.';
+                            break;
+                        default:
+                            pesan += error.message;
+                    }
+                    alert(pesan);
+                });
+            } else {
+                alert('Browser Anda tidak mendukung geolocation.');
+            }
+        });
+
+        // ===== PREVIEW FOTO =====
+        document.getElementById('foto').addEventListener('change', function(e) {
+            const files = e.target.files;
+            const preview = document.getElementById('fotoPreview');
+            preview.innerHTML = '';
+            if (files.length > 5) {
+                alert('Maksimal 5 foto');
+                this.value = '';
+                return;
+            }
+            if (files.length < 1) {
+                return;
+            }
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                if (file.size > 2 * 1024 * 1024) {
+                    alert(`File ${file.name} terlalu besar (maks 2MB)`);
+                    this.value = '';
+                    preview.innerHTML = '';
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    const img = document.createElement('img');
+                    img.src = ev.target.result;
+                    img.style.width = '100px';
+                    img.style.height = '100px';
+                    img.style.objectFit = 'cover';
+                    img.className = 'border rounded';
+                    preview.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // ===== CAPTCHA =====
+        function generateCaptcha() {
+            const num1 = Math.floor(Math.random() * 10) + 1;
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            document.getElementById('captchaQuestion').innerText = `${num1} + ${num2} = ?`;
+            return num1 + num2;
+        }
+        let correctAnswer = generateCaptcha();
+
+        // ===== SUBMIT FORM =====
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Validasi CAPTCHA
+            const answer = parseInt(document.getElementById('captchaAnswer').value);
+            if (answer !== correctAnswer) {
+                document.getElementById('registerAlert').innerHTML = '<div class="alert alert-danger">Jawaban verifikasi salah. Silakan coba lagi.</div>';
+                correctAnswer = generateCaptcha();
+                return;
+            }
+
+            // Validasi foto
+            const fotoInput = document.getElementById('foto');
+            if (fotoInput.files.length < 1 || fotoInput.files.length > 5) {
+                document.getElementById('registerAlert').innerHTML = '<div class="alert alert-danger">Jumlah foto harus 1-5.</div>';
+                return;
+            }
+
+            // Buat FormData
+            const formData = new FormData();
+            formData.append('action', 'register');
+            formData.append('nama', document.getElementById('namaLengkap').value);
+            formData.append('usaha', document.getElementById('namaUsaha').value);
+            formData.append('kategori', document.getElementById('kategori').value);
+            formData.append('alamat', document.getElementById('alamat').value);
+            formData.append('latitude', document.getElementById('latitude').value);
+            formData.append('longitude', document.getElementById('longitude').value);
+            
+            for (let i = 0; i < fotoInput.files.length; i++) {
+                formData.append('foto', fotoInput.files[i]);
+            }
+
+            // Kirim dengan mode no-cors
+            fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                body: formData,
+                mode: 'no-cors'
+            })
+            .then(() => {
+                document.getElementById('registerAlert').innerHTML = '<div class="alert alert-success">Pendaftaran berhasil! Terima kasih telah mendaftar.</div>';
+                document.getElementById('registerForm').reset();
+                if (marker) {
+                    map.removeLayer(marker);
+                    marker = null;
+                }
+                document.getElementById('latitude').value = '';
+                document.getElementById('longitude').value = '';
+                document.getElementById('fotoPreview').innerHTML = '';
+                correctAnswer = generateCaptcha();
+            })
+            .catch(() => {
+                document.getElementById('registerAlert').innerHTML = '<div class="alert alert-danger">Gagal mengirim. Coba lagi nanti.</div>';
+                correctAnswer = generateCaptcha();
+            });
+        });
+
+        // ===== SCRIPT UNTUK NAVBAR BERDASARKAN STATUS LOGIN =====
+        document.addEventListener('DOMContentLoaded', function() {
+            const userStr = localStorage.getItem('user');
+            if (userStr) {
+                try {
+                    const user = JSON.parse(userStr);
+                    
+                    // Sembunyikan tombol login
+                    const navLogin = document.getElementById('navLogin');
+                    if (navLogin) navLogin.style.display = 'none';
+                    
+                    // Tampilkan dropdown user
+                    const navUser = document.getElementById('navUser');
+                    if (navUser) navUser.style.display = 'block';
+                    
+                    // Isi nama user
+                    const userNameSpan = document.getElementById('userName');
+                    if (userNameSpan) {
+                        userNameSpan.innerText = user.nama || user.email || 'User';
+                    }
+                    
+                    // Atur link dashboard sesuai role
+                    const dashboardLink = document.getElementById('dashboardLink');
+                    if (dashboardLink) {
+                        if (user.role === 'admin') {
+                            dashboardLink.href = 'admin/dashboard.html';
+                            dashboardLink.innerText = 'Dashboard Admin';
+                        } else {
+                            dashboardLink.href = 'member/profil.html';
+                            dashboardLink.innerText = 'Dashboard Member';
+                        }
+                    }
+                    
+                    // Event logout
+                    const logoutBtn = document.getElementById('logoutBtn');
+                    if (logoutBtn) {
+                        logoutBtn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            logout(); // fungsi dari auth.js
+                        });
+                    }
+                } catch (e) {
+                    console.error('Gagal parsing data user', e);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

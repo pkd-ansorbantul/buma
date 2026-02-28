@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUMA Bantul - Badan Usaha Milik Ansor Kabupaten Bantul</title>
+    <!-- SEO Meta -->
+    <meta name="description" content="BUMA Bantul adalah wadah pendataan dan pengembangan usaha anggota Ansor se-Kabupaten Bantul. Daftarkan usaha Anda sekarang!">
+    <meta name="keywords" content="BUMA, Ansor Bantul, usaha anggota Ansor, pendataan usaha, Bantul, UMKM Bantul">
+    <meta name="author" content="PC Ansor Bantul">
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://buma.ansor-bantul.or.id/">
+    <meta property="og:title" content="BUMA Bantul - Badan Usaha Milik Ansor">
+    <meta property="og:description" content="Wadah pendataan dan pengembangan usaha anggota Ansor se-Kabupaten Bantul.">
+    <meta property="og:image" content="assets/og-image.jpg">
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <!-- Bootstrap 5 + Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- AOS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Enhanced Inline Styles -->
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        body {
+            overflow-x: hidden;
+        }
+        /* Navbar lebih elegan dengan logo dan teks sejajar */
+        .navbar {
+            background: rgba(255,255,255,0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+        }
+        .navbar-brand img {
+            margin-right: 0.75rem;
+        }
+        .brand-text {
+            line-height: 1.2;
+        }
+        .brand-main {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #1e3c2c; /* hijau tua Ansor */
+            letter-spacing: -0.02em;
+        }
+        .brand-sub {
+            font-size: 0.85rem;
+            color: #b8860b; /* emas */
+            font-weight: 600;
+            margin-top: -2px;
+        }
+        .navbar-nav .nav-link {
+            font-weight: 500;
+            color: #333;
+            margin: 0 0.2rem;
+            transition: color 0.2s;
+            position: relative;
+        }
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            color: #1e3c2c !important;
+        }
+        .navbar-nav .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 3px;
+            background-color: #b8860b;
+            transition: width 0.3s ease;
+        }
+        .navbar-nav .nav-link:hover::after,
+        .navbar-nav .nav-link.active::after {
+            width: 70%;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #1e3c2c, #2a5a3a);
+            border: none;
+            box-shadow: 0 8px 20px rgba(30,60,44,0.2);
+            transition: all 0.3s;
+            border-radius: 30px;
+            padding: 0.5rem 1.5rem;
+            font-weight: 500;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2a5a3a, #1e3c2c);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(30,60,44,0.3);
+        }
+        .btn-warning {
+            background: linear-gradient(135deg, #b8860b, #daa520);
+            border: none;
+            color: #fff;
+            box-shadow: 0 8px 20px rgba(184,134,11,0.2);
+        }
+        .btn-warning:hover {
+            background: linear-gradient(135deg, #daa520, #b8860b);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(184,134,11,0.3);
+            color: #fff;
+        }
+        .btn-outline-light {
+            border: 2px solid rgba(255,255,255,0.3);
+            color: #fff;
+        }
+        .btn-outline-light:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: #fff;
+            color: #fff;
+        }
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1e3c2c 0%, #2a5a3a 100%);
+            position: relative;
+            padding: 100px 0;
+        }
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0 0 L100 100 M100 0 L0 100" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></svg>');
+            background-size: 30px 30px;
+            opacity: 0.3;
+        }
+        .hero .display-3 {
+            font-weight: 800;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        /* Card Styles */
+        .card {
+            border: none;
+            border-radius: 20px;
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            overflow: hidden;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
+        }
+        .card .rounded-circle {
+            transition: all 0.3s;
+        }
+        .card:hover .rounded-circle {
+            transform: scale(1.1);
+            background-color: rgba(30,60,44,0.2) !important;
+        }
+        /* Statistik */
+        .display-3.fw-bold.text-primary {
+            color: #1e3c2c !important;
+            font-weight: 800;
+        }
+        /* Fitur Cards */
+        #fitur .card {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            border-radius: 20px;
+            padding: 2rem 1rem;
+        }
+        #fitur .card i {
+            background: rgba(30,60,44,0.1);
+            padding: 15px;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+        #fitur .card:hover i {
+            background: #1e3c2c;
+            color: #fff !important;
+        }
+        /* Testimoni */
+        #testimoni .card {
+            background: #fff;
+            border-radius: 25px;
+            padding: 2rem 1.5rem;
+        }
+        #testimoni .card img {
+            border: 3px solid #b8860b;
+            object-fit: cover;
+        }
+        /* Kontak */
+        #kontak .bg-light {
+            background: #fff !important;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.03);
+        }
+        /* Floating FAQ */
+        .faq-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 999;
+        }
+        #faqToggle {
+            width: 65px;
+            height: 65px;
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #b8860b, #daa520);
+            border: none;
+            box-shadow: 0 10px 25px rgba(184,134,11,0.4);
+            transition: all 0.3s;
+        }
+        #faqToggle:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+        .faq-panel {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 320px;
+            display: none;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 30px 50px rgba(0,0,0,0.2);
+            border: none;
+        }
+        .faq-panel .card-header {
+            background: linear-gradient(135deg, #1e3c2c, #2a5a3a);
+            color: white;
+            font-weight: 600;
+            padding: 1rem 1.25rem;
+        }
+        /* Footer */
+        footer {
+            background: #0f1f16 !important;
+        }
+        footer a:hover {
+            color: #b8860b !important;
+        }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero .display-3 {
+                font-size: 2.5rem;
+            }
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar dengan logo dan teks di samping kanan (sesuai permintaan) -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="assets/logo buma.webp" alt="BUMA Bantul" height="55">
+                <div class="brand-text">
+                    <div class="brand-main">BUMA PC GP Ansor</div>
+                    <div class="brand-sub">Kabupaten Bantul</div>
+                </div>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Beranda</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#tentang">Tentang</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#fitur">Fitur</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#usaha">Usaha</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#testimoni">Testimoni</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#kontak">Kontak</a></li>
+                    <li class="nav-item"><a class="nav-link" href="daftar-usaha.html">Daftar Usaha</a></li>
+
+                    <!-- Tampilan jika BELUM login -->
+                    <li class="nav-item ms-lg-2 mt-2 mt-lg-0" id="navLogin">
+                        <a class="btn btn-primary" href="login.html"><i class="bi bi-box-arrow-in-right"></i> Login</a>
+                    </li>
+
+                    <!-- Tampilan jika SUDAH login (awalnya disembunyikan) -->
+                    <li class="nav-item dropdown" id="navUser" style="display: none;">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle fs-5 me-1"></i>
+                            <span id="userName">User</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="#" id="dashboardLink">Dashboard</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section dengan Wave -->
+    <header class="hero position-relative text-white overflow-hidden">
+        <div class="container py-5 position-relative" style="z-index: 2;">
+            <div class="row align-items-center min-vh-50 py-5">
+                <div class="col-lg-6" data-aos="fade-right" data-aos-duration="1000">
+                    <h1 class="display-3 fw-bold mb-3">Selamat Datang di <span class="text-warning">BUMA Bantul</span></h1>
+                    <p class="lead mb-4">Badan Usaha Milik Ansor se-Kabupaten Bantul — Wadah pendataan, pengembangan, dan pemberdayaan usaha anggota Ansor.</p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="login.html" class="btn btn-light btn-lg px-4"><i class="bi bi-speedometer2"></i> Masuk Dashboard</a>
+                        <a href="#tentang" class="btn btn-outline-light btn-lg px-4"><i class="bi bi-info-circle"></i> Pelajari Lebih Lanjut</a>
+                        <a href="daftar-usaha.html" class="btn btn-warning btn-lg px-4"><i class="bi bi-pencil-square"></i> Daftar Usaha Sekarang</a>
+                    </div>
+                </div>
+                <div class="col-lg-6 d-none d-lg-block" data-aos="fade-left" data-aos-duration="1000">
+                    <img src="assets/hero-illustration.svg" alt="Ilustrasi BUMA" class="img-fluid">
+                </div>
+            </div>
+        </div>
+        <!-- Wave SVG -->
+        <div class="position-absolute bottom-0 start-0 w-100" style="line-height: 0;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                <path fill="#ffffff" fill-opacity="1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,170.7C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+            </svg>
+        </div>
+    </header>
+
+    <!-- Tentang BUMA -->
+    <section id="tentang" class="py-5" style="background: #f9fafc;">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="display-5 fw-bold" style="color: #1e3c2c;">Tentang BUMA</h2>
+                <p class="lead text-muted">Menggerakkan ekonomi anggota melalui pendataan dan pendampingan usaha</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card h-100 border-0 shadow-sm text-center p-4">
+                        <div class="rounded-circle bg-primary bg-opacity-10 p-3 mx-auto mb-3" style="width: 80px; height: 80px;">
+                            <i class="bi bi-people-fill text-primary fs-1"></i>
+                        </div>
+                        <h4>Anggota Aktif</h4>
+                        <p>Lebih dari 500 anggota Ansor yang telah mendaftarkan usahanya di seluruh Bantul.</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card h-100 border-0 shadow-sm text-center p-4">
+                        <div class="rounded-circle bg-success bg-opacity-10 p-3 mx-auto mb-3" style="width: 80px; height: 80px;">
+                            <i class="bi bi-shop text-success fs-1"></i>
+                        </div>
+                        <h4>Usaha Terdata</h4>
+                        <p>350+ UMKM dari berbagai sektor: kuliner, fashion, kerajinan, pertanian, dan jasa.</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="card h-100 border-0 shadow-sm text-center p-4">
+                        <div class="rounded-circle bg-warning bg-opacity-10 p-3 mx-auto mb-3" style="width: 80px; height: 80px;">
+                            <i class="bi bi-graph-up-arrow text-warning fs-1"></i>
+                        </div>
+                        <h4>Pendampingan</h4>
+                        <p>Program pelatihan dan pendampingan rutin untuk meningkatkan kapasitas usaha.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistik -->
+    <section class="py-5 bg-white">
+        <div class="container">
+            <div class="row text-center g-4">
+                <div class="col-md-3 col-6" data-aos="zoom-in">
+                    <div class="display-3 fw-bold text-primary">500+</div>
+                    <p class="text-muted">Anggota</p>
+                </div>
+                <div class="col-md-3 col-6" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="display-3 fw-bold text-primary">350+</div>
+                    <p class="text-muted">Usaha Terdaftar</p>
+                </div>
+                <div class="col-md-3 col-6" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="display-3 fw-bold text-primary">17</div>
+                    <p class="text-muted">Kecamatan</p>
+                </div>
+                <div class="col-md-3 col-6" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="display-3 fw-bold text-primary">5</div>
+                    <p class="text-muted">Sektor Unggulan</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fitur / Layanan -->
+    <section id="fitur" class="py-5" style="background: #f9fafc;">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="display-5 fw-bold" style="color: #1e3c2c;">Fitur & Layanan</h2>
+                <p class="lead text-muted">Kemudahan bagi anggota Ansor dalam mengelola dan mengembangkan usaha</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4" data-aos="flip-left">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="bi bi-file-text-fill text-primary fs-1"></i>
+                            <h5 class="card-title mt-3">Pendataan Usaha</h5>
+                            <p class="card-text">Lengkapi profil usaha Anda dengan mudah melalui dashboard.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="flip-left" data-aos-delay="100">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="bi bi-map-fill text-primary fs-1"></i>
+                            <h5 class="card-title mt-3">Pemetaan Usaha</h5>
+                            <p class="card-text">Lihat sebaran usaha anggota Ansor di seluruh Bantul.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="flip-left" data-aos-delay="200">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="bi bi-calendar-event-fill text-primary fs-1"></i>
+                            <h5 class="card-title mt-3">Pelatihan & Event</h5>
+                            <p class="card-text">Informasi pelatihan dan event pengembangan usaha terkini.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="flip-left" data-aos-delay="300">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="bi bi-bar-chart-fill text-primary fs-1"></i>
+                            <h5 class="card-title mt-3">Laporan & Analitik</h5>
+                            <p class="card-text">Pantau perkembangan usaha dengan laporan interaktif.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="flip-left" data-aos-delay="400">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="bi bi-chat-dots-fill text-primary fs-1"></i>
+                            <h5 class="card-title mt-3">Forum Komunitas</h5>
+                            <p class="card-text">Diskusi dan berbagi pengalaman antar pelaku usaha Ansor.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="flip-left" data-aos-delay="500">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="bi bi-phone-fill text-primary fs-1"></i>
+                            <h5 class="card-title mt-3">Akses Mobile</h5>
+                            <p class="card-text">Sistem responsif, bisa diakses dari mana saja.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Usaha Unggulan -->
+    <section id="usaha" class="py-5 bg-white">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="display-5 fw-bold" style="color: #1e3c2c;">Usaha Unggulan Anggota</h2>
+                <p class="lead text-muted">Beberapa usaha yang telah terdaftar di BUMA Bantul</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4" data-aos="fade-right">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <img src="assets/usaha1.jpg" class="card-img-top" alt="Kuliner" style="height: 200px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title">Kuliner "Sego Abang"</h5>
+                            <p class="card-text">Nasi khas Bantul dengan lauk pilihan, berlokasi di Sewon.</p>
+                            <span class="badge bg-primary">Kuliner</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <img src="assets/usaha2.jpg" class="card-img-top" alt="Fashion" style="height: 200px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title">Batik "Tulis Budoyo"</h5>
+                            <p class="card-text">Batik tulis khas Bantul dengan motif modern.</p>
+                            <span class="badge bg-success">Fashion</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-left">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <img src="assets/usaha3.jpg" class="card-img-top" alt="Kerajinan" style="height: 200px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title">Kerajinan "Kayu Lestari"</h5>
+                            <p class="card-text">Kerajinan kayu dan souvenir khas Bantul.</p>
+                            <span class="badge bg-warning text-dark">Kerajinan</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <a href="#" class="btn btn-outline-primary btn-lg">Lihat Semua Usaha <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimoni -->
+    <section id="testimoni" class="py-5" style="background: #f9fafc;">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="display-5 fw-bold" style="color: #1e3c2c;">Apa Kata Mereka?</h2>
+                <p class="lead text-muted">Testimoni anggota Ansor yang merasakan manfaat BUMA</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4" data-aos="zoom-in-right">
+                    <div class="card border-0 shadow-sm p-3">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="assets/testi1.jpg" class="rounded-circle me-3" width="60" height="60" alt="Testimoni">
+                            <div>
+                                <h6 class="mb-0">Ahmad Fauzi</h6>
+                                <small class="text-muted">Kuliner, Jetis</small>
+                            </div>
+                        </div>
+                        <p class="card-text">"Dengan BUMA, usaha kuliner saya semakin dikenal. Pendataan mudah dan banyak pelatihan bermanfaat."</p>
+                        <i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="card border-0 shadow-sm p-3">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="assets/testi2.jpg" class="rounded-circle me-3" width="60" height="60" alt="Testimoni">
+                            <div>
+                                <h6 class="mb-0">Siti Aminah</h6>
+                                <small class="text-muted">Batik, Bantul Kota</small>
+                            </div>
+                        </div>
+                        <p class="card-text">"Pemasaran batik saya meluas setelah mengikuti pameran yang diadakan BUMA. Terima kasih Ansor!"</p>
+                        <i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="zoom-in-left" data-aos-delay="200">
+                    <div class="card border-0 shadow-sm p-3">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="assets/testi3.jpg" class="rounded-circle me-3" width="60" height="60" alt="Testimoni">
+                            <div>
+                                <h6 class="mb-0">Nur Hidayat</h6>
+                                <small class="text-muted">Kerajinan, Piyungan</small>
+                            </div>
+                        </div>
+                        <p class="card-text">"Sistemnya modern, mudah dipakai. Saya bisa pantau omzet dan stok barang."</p>
+                        <i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i><i class="bi bi-star-fill text-warning"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kontak Section -->
+    <section id="kontak" class="py-5 bg-white">
+        <div class="container">
+            <h2 class="text-center display-5 fw-bold mb-4" data-aos="fade-up" style="color: #1e3c2c;">Kontak Kami</h2>
+            <div class="row g-4">
+                <div class="col-md-5" data-aos="fade-right">
+                    <div class="bg-light p-4 rounded-4 shadow-sm h-100">
+                        <h5 class="mb-3"><i class="bi bi-geo-alt-fill" style="color: #1e3c2c;"></i> Alamat</h5>
+                        <p>Kantor PC Ansor Bantul, Jl. Parangtritis No. 123, Bantul</p>
+                        <h5 class="mb-3"><i class="bi bi-envelope-fill" style="color: #1e3c2c;"></i> Email</h5>
+                        <p>buma@ansor-bantul.or.id</p>
+                        <h5 class="mb-3"><i class="bi bi-whatsapp" style="color: #1e3c2c;"></i> WhatsApp</h5>
+                        <p>0812-3456-7890</p>
+                        <hr>
+                        <h5 class="mb-3">Ikuti Kami</h5>
+                        <div>
+                            <a href="#" class="text-dark me-3 fs-4"><i class="bi bi-facebook" style="color: #1e3c2c;"></i></a>
+                            <a href="#" class="text-dark me-3 fs-4"><i class="bi bi-instagram" style="color: #1e3c2c;"></i></a>
+                            <a href="#" class="text-dark me-3 fs-4"><i class="bi bi-youtube" style="color: #1e3c2c;"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7" data-aos="fade-left">
+                    <div class="bg-light p-4 rounded-4 shadow-sm">
+                        <form id="contactForm">
+                            <input type="hidden" name="action" value="contact">
+                            <div class="mb-3">
+                                <label for="contactName" class="form-label">Nama</label>
+                                <input type="text" class="form-control" id="contactName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="contactEmail" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="contactEmail" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="contactMessage" class="form-label">Pesan</label>
+                                <textarea class="form-control" id="contactMessage" rows="4" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Verifikasi</label>
+                                <div class="row g-2 align-items-center">
+                                    <div class="col-auto">
+                                        <span id="captchaQuestion" class="captcha-box d-inline-block px-4 py-2 bg-white border rounded-3 fw-bold"></span>
+                                    </div>
+                                    <div class="col">
+                                        <input type="text" class="form-control" id="captchaAnswer" placeholder="Jawaban" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100"><i class="bi bi-send"></i> Kirim Pesan</button>
+                        </form>
+                        <div id="contactAlert" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating FAQ Button -->
+    <div class="faq-float">
+        <button class="btn btn-primary rounded-circle shadow-lg" id="faqToggle">
+            ?
+        </button>
+        <div class="faq-panel card" id="faqPanel">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <span class="fw-bold">Tanya Jawab</span>
+                <button type="button" class="btn-close btn-close-white" id="closeFaq" aria-label="Tutup"></button>
+            </div>
+            <div class="card-body p-0">
+                <div class="accordion accordion-flush" id="faqFloatAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#floatFaq1">
+                                Apa itu BUMA?
+                            </button>
+                        </h2>
+                        <div id="floatFaq1" class="accordion-collapse collapse" data-bs-parent="#faqFloatAccordion">
+                            <div class="accordion-body">BUMA adalah Badan Usaha Milik Ansor, wadah pendataan dan pengembangan usaha anggota Ansor di Kabupaten Bantul.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#floatFaq2">
+                                Siapa yang dapat mendaftar?
+                            </button>
+                        </h2>
+                        <div id="floatFaq2" class="accordion-collapse collapse" data-bs-parent="#faqFloatAccordion">
+                            <div class="accordion-body">Seluruh anggota Ansor yang memiliki usaha di wilayah Kabupaten Bantul.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#floatFaq3">
+                                Cara mendaftar?
+                            </button>
+                        </h2>
+                        <div id="floatFaq3" class="accordion-collapse collapse" data-bs-parent="#faqFloatAccordion">
+                            <div class="accordion-body">Hubungi admin BUMA untuk mendapat akun, atau daftar langsung via <a href="daftar-usaha.html">formulir online</a>.</div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#floatFaq4">
+                                Ada biaya?
+                            </button>
+                        </h2>
+                        <div id="floatFaq4" class="accordion-collapse collapse" data-bs-parent="#faqFloatAccordion">
+                            <div class="accordion-body">Tidak ada biaya. Sistem ini gratis untuk anggota Ansor.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white pt-5 pb-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <img src="assets/logo.png" alt="BUMA" height="50" class="mb-3">
+                    <p>Badan Usaha Milik Ansor Kabupaten Bantul. Memberdayakan ekonomi anggota menuju kemandirian.</p>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h5>Link Cepat</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#tentang" class="text-white-50 text-decoration-none">Tentang</a></li>
+                        <li><a href="#fitur" class="text-white-50 text-decoration-none">Fitur</a></li>
+                        <li><a href="#usaha" class="text-white-50 text-decoration-none">Usaha</a></li>
+                        <li><a href="#testimoni" class="text-white-50 text-decoration-none">Testimoni</a></li>
+                        <li><a href="#kontak" class="text-white-50 text-decoration-none">Kontak</a></li>
+                        <li><a href="daftar-usaha.html" class="text-white-50 text-decoration-none">Daftar Usaha</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5>Kontak</h5>
+                    <p class="text-white-50"><i class="bi bi-geo-alt"></i> Jl. Parangtritis No.123, Bantul</p>
+                    <p class="text-white-50"><i class="bi bi-envelope"></i> buma@ansor-bantul.or.id</p>
+                    <p class="text-white-50"><i class="bi bi-whatsapp"></i> 0812-3456-7890</p>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5>Media Sosial</h5>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white-50 fs-4"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-white-50 fs-4"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="text-white-50 fs-4"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="text-white-50">
+            <div class="text-center text-white-50">
+                &copy; 2025 BUMA Bantul. All rights reserved. Dikembangkan oleh <a href="#" class="text-white">PC Ansor Bantul</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Config & custom scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true, easing: 'ease-in-out' });
+
+        // Floating FAQ logic
+        document.addEventListener('DOMContentLoaded', function() {
+            const faqToggle = document.getElementById('faqToggle');
+            const faqPanel = document.getElementById('faqPanel');
+            const closeFaq = document.getElementById('closeFaq');
+            if (faqToggle) {
+                faqToggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    faqPanel.style.display = faqPanel.style.display === 'block' ? 'none' : 'block';
+                });
+                closeFaq.addEventListener('click', function() {
+                    faqPanel.style.display = 'none';
+                });
+                document.addEventListener('click', function(event) {
+                    if (!faqPanel.contains(event.target) && !faqToggle.contains(event.target)) {
+                        faqPanel.style.display = 'none';
+                    }
+                });
+            }
+        });
+
+        // Captcha
+        function generateCaptcha() {
+            const num1 = Math.floor(Math.random() * 10) + 1;
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            document.getElementById('captchaQuestion').innerText = `${num1} + ${num2} = ?`;
+            return num1 + num2;
+        }
+        let correctAnswer = generateCaptcha();
+
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const answer = parseInt(document.getElementById('captchaAnswer').value);
+            if (answer !== correctAnswer) {
+                document.getElementById('contactAlert').innerHTML = '<div class="alert alert-danger">Jawaban verifikasi salah. Silakan coba lagi.</div>';
+                correctAnswer = generateCaptcha();
+                return;
+            }
+            const data = {
+                action: 'contact',
+                name: document.getElementById('contactName').value,
+                email: document.getElementById('contactEmail').value,
+                message: document.getElementById('contactMessage').value
+            };
+            fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams(data)
+            })
+            .then(() => {
+                document.getElementById('contactAlert').innerHTML = '<div class="alert alert-success">Pesan Anda telah terkirim. Terima kasih!</div>';
+                document.getElementById('contactForm').reset();
+                correctAnswer = generateCaptcha();
+            })
+            .catch(() => {
+                document.getElementById('contactAlert').innerHTML = '<div class="alert alert-danger">Gagal mengirim pesan. Coba lagi nanti.</div>';
+                correctAnswer = generateCaptcha();
+            });
+        });
+
+        // Login state
+        document.addEventListener('DOMContentLoaded', function() {
+            const userStr = localStorage.getItem('user');
+            if (userStr) {
+                try {
+                    const user = JSON.parse(userStr);
+                    const navLogin = document.getElementById('navLogin');
+                    if (navLogin) navLogin.style.display = 'none';
+                    const navUser = document.getElementById('navUser');
+                    if (navUser) navUser.style.display = 'block';
+                    const userNameSpan = document.getElementById('userName');
+                    if (userNameSpan) userNameSpan.innerText = user.nama || user.email || 'User';
+                    const dashboardLink = document.getElementById('dashboardLink');
+                    if (dashboardLink) {
+                        if (user.role === 'admin') {
+                            dashboardLink.href = 'admin/dashboard.html';
+                            dashboardLink.innerText = 'Dashboard Admin';
+                        } else {
+                            dashboardLink.href = 'member/profil.html';
+                            dashboardLink.innerText = 'Dashboard Member';
+                        }
+                    }
+                    const logoutBtn = document.getElementById('logoutBtn');
+                    if (logoutBtn) {
+                        logoutBtn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            logout();
+                        });
+                    }
+                } catch (e) { console.error('Gagal parsing data user', e); }
+            }
+        });
+    </script>
+
+    <!-- Smooth scroll & active menu -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.navbar-nav .nav-link[href^="#"]');
+            const sections = [];
+            navLinks.forEach(link => {
+                const targetId = link.getAttribute('href');
+                if (targetId !== '#') {
+                    const targetEl = document.querySelector(targetId);
+                    if (targetEl) sections.push({ id: targetId, element: targetEl, link: link });
+                }
+            });
+            function removeActiveClasses() { navLinks.forEach(link => link.classList.remove('active')); }
+            function setActiveMenu() {
+                let currentSection = null;
+                const scrollPosition = window.scrollY + 120;
+                for (let section of sections) {
+                    const el = section.element;
+                    const offsetTop = el.offsetTop;
+                    const offsetBottom = offsetTop + el.offsetHeight;
+                    if (scrollPosition >= offsetTop && scrollPosition < offsetBottom) {
+                        currentSection = section; break;
+                    }
+                }
+                removeActiveClasses();
+                if (currentSection) currentSection.link.classList.add('active');
+            }
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        const navbarHeight = document.querySelector('.navbar').offsetHeight;
+                        const targetPosition = targetElement.offsetTop - navbarHeight;
+                        window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+                        removeActiveClasses();
+                        this.classList.add('active');
+                    }
+                });
+            });
+            let ticking = false;
+            window.addEventListener('scroll', function() {
+                if (!ticking) {
+                    window.requestAnimationFrame(function() { setActiveMenu(); ticking = false; });
+                    ticking = true;
+                }
+            });
+            setActiveMenu();
+        });
+    </script>
+</body>
+</html>

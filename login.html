@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - BUMA Bantul</title>
+    <!-- Bootstrap 5 + Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- AOS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1e3c2c 0%, #2a5a3a 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+        /* Pola garis dekoratif (seperti di hero index) */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0 0 L100 100 M100 0 L0 100" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></svg>');
+            background-size: 30px 30px;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        .login-card {
+            border: none;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+            background: rgba(255,255,255,0.98);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 2;
+        }
+        .login-header {
+            background: white;
+            padding: 2rem 2rem 1rem 2rem;
+            text-align: center;
+        }
+        .login-header h3 {
+            color: #1e3c2c;
+            font-weight: 800;
+        }
+        .login-header p {
+            color: #6c757d;
+        }
+        .login-body {
+            padding: 1.5rem 2rem 2rem 2rem;
+        }
+        .form-label {
+            font-weight: 600;
+            color: #1e3c2c;
+        }
+        .form-control {
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s;
+        }
+        .form-control:focus {
+            box-shadow: 0 0 0 3px rgba(30,60,44,0.15);
+            border-color: #1e3c2c;
+        }
+        .input-group-text {
+            background: transparent;
+            border: none;
+            color: #1e3c2c;
+            font-size: 1.2rem;
+            padding-left: 0;
+        }
+        .btn-login {
+            background: linear-gradient(135deg, #1e3c2c, #2a5a3a);
+            border: none;
+            border-radius: 0.75rem;
+            padding: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            color: white;
+            box-shadow: 0 8px 20px rgba(30,60,44,0.2);
+        }
+        .btn-login:hover:not(:disabled) {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #2a5a3a, #1e3c2c);
+            box-shadow: 0 12px 25px rgba(30,60,44,0.3);
+        }
+        .btn-login:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        .back-link {
+            color: #1e3c2c;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .back-link:hover {
+            color: #b8860b;
+            text-decoration: underline;
+        }
+        .form-check-input:checked {
+            background-color: #1e3c2c;
+            border-color: #1e3c2c;
+        }
+        .form-check-input:focus {
+            border-color: #1e3c2c;
+            box-shadow: 0 0 0 0.2rem rgba(30,60,44,0.25);
+        }
+        .error-fallback {
+            color: #dc3545;
+            background: #f8d7da;
+            border-radius: 0.75rem;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            display: none;
+            border-left: 4px solid #b8860b;
+        }
+        hr {
+            opacity: 0.2;
+            background-color: #1e3c2c;
+        }
+        @media (max-width: 576px) {
+            .login-header {
+                padding: 1.5rem 1rem 0.5rem 1rem;
+            }
+            .login-body {
+                padding: 1rem 1.5rem 1.5rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" data-aos="fade-up" data-aos-duration="800">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="card login-card">
+                    <div class="login-header">
+                        <!-- Logo dengan teks (opsional) -->
+                        <img src="assets/logo buma.webp" alt="BUMA Bantul" height="60" class="mb-2" onerror="this.onerror=null; this.style.display='none'; document.getElementById('logoFallback').style.display='inline-block';">
+                        <i id="logoFallback" class="bi bi-building fs-1 mb-2" style="color: #1e3c2c; display: none;"></i>
+                        <h3 class="fw-bold">Selamat Datang Kembali</h3>
+                        <p class="text-muted">Silakan login ke dashboard BUMA</p>
+                    </div>
+                    <div class="login-body">
+                        <div id="configError" class="error-fallback">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <span>Terjadi kesalahan konfigurasi. Hubungi admin.</span>
+                        </div>
+                        <div id="loginError" class="error-fallback">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <span id="errorMessage">Login gagal. Periksa email dan password.</span>
+                        </div>
+                        <form id="loginForm">
+                            <div class="mb-4">
+                                <label for="email" class="form-label fw-semibold">Email</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-envelope-fill"></i></span>
+                                    <input type="email" class="form-control" id="email" placeholder="nama@email.com" required>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label for="password" class="form-label fw-semibold">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                                    <input type="password" class="form-control" id="password" placeholder="••••••••" required>
+                                </div>
+                            </div>
+                            <div class="mb-4 d-flex flex-wrap justify-content-between align-items-center">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="remember">
+                                    <label class="form-check-label" for="remember">Ingat saya</label>
+                                </div>
+                                <a href="#" class="back-link">Lupa password?</a>
+                            </div>
+                            <button type="submit" class="btn btn-login w-100 mb-3" id="loginButton">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Masuk
+                            </button>
+                            <div class="text-center">
+                                <span class="text-muted">Belum punya akun? </span>
+                                <a href="index.html#kontak" class="back-link">Hubungi admin</a>
+                            </div>
+                            <hr class="my-4">
+                            <div class="text-center">
+                                <a href="index.html" class="back-link"><i class="bi bi-arrow-left"></i> Kembali ke Beranda</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Config & auth -->
+    <script src="js/config.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        AOS.init();
+
+        const loginForm = document.getElementById('loginForm');
+        const loginButton = document.getElementById('loginButton');
+        const configErrorDiv = document.getElementById('configError');
+        const loginErrorDiv = document.getElementById('loginError');
+        const errorMessageSpan = document.getElementById('errorMessage');
+
+        // Cek apakah fungsi login tersedia
+        if (typeof login !== 'function') {
+            configErrorDiv.style.display = 'block';
+            loginButton.disabled = true;
+            console.error('Fungsi login tidak ditemukan. Pastikan auth.js dimuat dengan benar dan tidak ada error.');
+        } else {
+            // Event listener login
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                // Sembunyikan error sebelumnya
+                loginErrorDiv.style.display = 'none';
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const originalText = loginButton.innerHTML;
+
+                // Set loading state
+                loginButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Loading...';
+                loginButton.disabled = true;
+
+                try {
+                    const result = await login(email, password);
+                    if (!result) {
+                        // Jika login gagal, kembalikan tombol
+                        loginButton.innerHTML = originalText;
+                        loginButton.disabled = false;
+                        // Tampilkan error (pesan sudah diatur di auth.js? kita bisa menangkap dari exception)
+                        errorMessageSpan.textContent = 'Login gagal. Periksa email dan password.';
+                        loginErrorDiv.style.display = 'block';
+                    }
+                    // Jika sukses, redirect akan terjadi otomatis
+                } catch (error) {
+                    console.error('Error saat login:', error);
+                    loginButton.innerHTML = originalText;
+                    loginButton.disabled = false;
+                    errorMessageSpan.textContent = error.message || 'Terjadi kesalahan. Silakan coba lagi.';
+                    loginErrorDiv.style.display = 'block';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
