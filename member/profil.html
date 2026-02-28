@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Member - BUMA</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">BUMA Member</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="logout()">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2>Profil Usaha Saya</h2>
+        <div id="dataUsaha" class="mt-4">
+            <!-- Akan diisi oleh JS -->
+        </div>
+        <button class="btn btn-primary mt-3" onclick="editProfil()">Edit Data Usaha</button>
+    </div>
+
+    <!-- Modal Edit Usaha Member -->
+    <div class="modal fade" id="modalProfil" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Data Usaha</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formProfil">
+                        <input type="hidden" id="usahaId">
+                        <div class="mb-3">
+                            <label for="namaUsaha" class="form-label">Nama Usaha</label>
+                            <input type="text" class="form-control" id="namaUsaha" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="pemilik" class="form-label">Nama Pemilik</label>
+                            <input type="text" class="form-control" id="pemilik" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="alamat" class="form-label">Alamat</label>
+                            <textarea class="form-control" id="alamat" rows="2" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="kategori" class="form-label">Kategori</label>
+                            <input type="text" class="form-control" id="kategori">
+                        </div>
+                        <div class="mb-3">
+                            <label for="latitude" class="form-label">Latitude (opsional)</label>
+                            <input type="text" class="form-control" id="latitude">
+                        </div>
+                        <div class="mb-3">
+                            <label for="longitude" class="form-label">Longitude (opsional)</label>
+                            <input type="text" class="form-control" id="longitude">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" onclick="simpanProfil()">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/api.js"></script>
+    <script>
+        if (!cekAuth('member')) {}
+
+        const user = getUser();
+        let usahaSaya = null;
+
+        async function loadUsaha() {
+            const result = await getDataUsaha();
+            if (result.status === 'success') {
+                usahaSaya = result.data.find(u => u.userId === user.id);
+                displayUsaha();
+            }
+        }
+
+        function displayUsaha() {
+            const div = document.getElementById('dataUsaha');
+            if (usahaSaya) {
+                div.innerHTML = `
+                    <table class="table table-bordered">
+                        <tr><th>Nama Usaha</th><td>${usahaSaya.namaUsaha || '-'}</td></tr>
+                        <tr><th>Pemilik</th><td>${usahaSaya.pemilik || '-'}</td></tr>
+                        <tr><th>Alamat</th><td>${usahaSaya.alamat || '-'}</td></tr>
+                        <tr><th>Kategori</th><td>${usahaSaya.kategori || '-'}</td></tr>
+                        <tr><th>Latitude</th><td>${usahaSaya.latitude || '-'}</td></tr>
+                        <tr><th>Longitude</th><td>${usahaSaya.longitude || '-'}</td></tr>
+                    </table>
+                `;
+            } else {
+                div.innerHTML = '<p>Anda belum memiliki data usaha. Silakan tambah data.</p>';
+            }
+        }
+
+        function editProfil() {
+            if (usahaSaya) {
+                document.getElementById('usahaId').value = usahaSaya.id;
+                document.getElementById('namaUsaha').value = usahaSaya.namaUsaha || '';
+                document.getElementById('pemilik').value = usahaSaya.pemilik || '';
+                document.getElementById('alamat').value = usahaSaya.alamat || '';
+                document.getElementById('kategori').value = usahaSaya.kategori || '';
+                document.getElementById('latitude').value = usahaSaya.latitude || '';
+                document.getElementById('longitude').value = usahaSaya.longitude || '';
+            } else {
+                // Jika belum ada, kosongkan form untuk tambah baru
+                document.getElementById('usahaId').value = '';
+                document.getElementById('namaUsaha').value = '';
+                document.getElementById('pemilik').value = user.nama; // default dari user
+                document.getElementById('alamat').value = '';
+                document.getElementById('kategori').value = '';
+                document.getElementById('latitude').value = '';
+                document.getElementById('longitude').value = '';
+            }
+            new bootstrap.Modal(document.getElementById('modalProfil')).show();
+        }
+
+        async function simpanProfil() {
+            const data = {
+                userId: user.id,
+                namaUsaha: document.getElementById('namaUsaha').value,
+                pemilik: document.getElementById('pemilik').value,
+                alamat: document.getElementById('alamat').value,
+                kategori: document.getElementById('kategori').value,
+                latitude: document.getElementById('latitude').value,
+                longitude: document.getElementById('longitude').value
+            };
+            const id = document.getElementById('usahaId').value;
+            let result;
+            if (id) {
+                data.id = id;
+                result = await updateDataUsaha(data);
+            } else {
+                result = await addDataUsaha(data);
+            }
+            if (result.status === 'success') {
+                alert('Data tersimpan');
+                bootstrap.Modal.getInstance(document.getElementById('modalProfil')).hide();
+                loadUsaha();
+            } else {
+                alert('Gagal: ' + result.message);
+            }
+        }
+
+        loadUsaha();
+    </script>
+</body>
+</html>
