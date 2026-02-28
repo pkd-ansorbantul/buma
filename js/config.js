@@ -1,2 +1,2 @@
 // Konfigurasi URL Apps Script (ganti dengan URL hasil deploy)
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw9IK_CkQdT3G0cspVAM6AHMKOoxwQ-khvS-59ezMqiuxp6FPC-KXvbiOhxBWp-TqdfTA/exec'; // Ganti!
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyiaYJ_-iVsp6o-rnR3yUDPPMR_UASWHKWm_qzDZmcP3T77FNCTLUSUMeERrSJu-yakdw/exec'; // Ganti!
