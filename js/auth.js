@@ -1,74 +1,95 @@
-// auth.js - Versi Final (tanpa deklarasi ulang APPS_SCRIPT_URL)
+// auth.js - Fungsi autentikasi untuk website BUMA
 
-// Fungsi login
-async function login(email, password) {
-    try {
-        const response = await fetch(APPS_SCRIPT_URL, { // APPS_SCRIPT_URL dari config.js
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ action: 'login', email, password })
-        });
-        
-        const result = await response.json();
-        if (result.status === 'success') {
-            localStorage.setItem('token', result.data.token);
-            localStorage.setItem('user', JSON.stringify(result.data));
-            
-            if (result.data.role === 'admin') {
-                window.location.href = 'admin/dashboard.html';
-            } else {
-                window.location.href = 'member/profil.html';
-            }
-            return true;
-        } else {
-            return false;
-        }
-    } catch (error) {
-        console.error('Login error:', error);
-        return false;
-    }
-}
-
-// Fungsi logout
-function logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    
-    const currentPath = window.location.pathname;
-    if (currentPath.includes('/admin/') || currentPath.includes('/member/')) {
-        window.location.href = '../login.html';
+/**
+ * Mengecek apakah user sudah login dan memiliki role yang sesuai.
+ * Jika tidak, redirect ke halaman login atau dashboard yang sesuai.
+ * @param {string} requiredRole - Role yang dibutuhkan ('admin' atau 'member')
+ * @returns {boolean} - true jika authorized
+ */
+function checkAuth(requiredRole) {
+  const token = sessionStorage.getItem('token');
+  const role = sessionStorage.getItem('role');
+  
+  if (!token) {
+    window.location.href = 'login.html';
+    return false;
+  }
+  
+  if (requiredRole && role !== requiredRole) {
+    // Jika role salah, arahkan ke dashboard yang sesuai
+    if (role === 'admin') {
+      window.location.href = 'dashboard-admin.html';
+    } else if (role === 'member') {
+      window.location.href = 'dashboard-member.html';
     } else {
-        window.location.href = 'login.html';
+      window.location.href = 'login.html';
     }
+    return false;
+  }
+  
+  return true;
 }
 
-// Cek autentikasi
-function cekAuth(roleRequired = null) {
-    const token = localStorage.getItem('token');
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    
-    if (!token) {
-        const currentPath = window.location.pathname;
-        if (currentPath.includes('/admin/') || currentPath.includes('/member/')) {
-            window.location.href = '../login.html';
-        } else {
-            window.location.href = 'login.html';
-        }
-        return false;
+/**
+ * Memperbarui tampilan navbar berdasarkan status login.
+ * Fungsi ini harus dipanggil di setiap halaman yang memiliki elemen:
+ * - #userDropdown (li dengan class dropdown)
+ * - #userName (span di dalam dropdown toggle)
+ * - #dashboardLink (a di dalam dropdown menu)
+ * - #loginLink (li untuk link login)
+ */
+function updateNavbar() {
+  const token = sessionStorage.getItem('token');
+  const role = sessionStorage.getItem('role');
+  const nama = sessionStorage.getItem('nama');
+
+  const userDropdown = document.getElementById('userDropdown');
+  const userNameSpan = document.getElementById('userName');
+  const dashboardLink = document.getElementById('dashboardLink');
+  const loginLink = document.getElementById('loginLink');
+
+  if (token) {
+    // User sudah login
+    if (userDropdown) {
+      userDropdown.style.display = 'list-item';
     }
-    
-    if (roleRequired && user.role !== roleRequired) {
-        alert('Akses ditolak');
-        window.location.href = 'index.html';
-        return false;
+    if (userNameSpan) {
+      userNameSpan.innerText = nama || 'User';
     }
-    return true;
+    if (dashboardLink) {
+      if (role === 'admin') {
+        dashboardLink.href = 'dashboard-admin.html';
+      } else if (role === 'member') {
+        dashboardLink.href = 'dashboard-member.html';
+      }
+    }
+    if (loginLink) {
+      loginLink.style.display = 'none';
+    }
+  } else {
+    // User belum login
+    if (userDropdown) {
+      userDropdown.style.display = 'none';
+    }
+    if (loginLink) {
+      loginLink.style.display = 'list-item';
+    }
+  }
 }
 
-// Dapatkan user info
-function getUser() {
-    return JSON.parse(localStorage.getItem('user') || '{}');
+/**
+ * Melakukan logout: panggil API logout, hapus session, redirect ke beranda.
+ */
+async function logout() {
+  const token = sessionStorage.getItem('token');
+  if (token) {
+    try {
+      // Panggil API logout (opsional)
+      await apiCall('logout', { token });
+    } catch (err) {
+      console.error('Logout error:', err);
+    }
+  }
+  sessionStorage.clear();
+  window.location.href = 'index.html';
 }
