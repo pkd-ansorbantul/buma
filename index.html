@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BUMA Bantul - Beranda</title>
+  <title>BUMA PC GP Ansor Kabupaten Bantul - Beranda</title>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Bootstrap Icons -->
@@ -19,7 +19,18 @@
       backdrop-filter: blur(10px);
       box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     }
-    .navbar-brand { font-weight: 700; color: #1e2b3c !important; }
+    .navbar-brand {
+      font-weight: 700;
+      color: #1e2b3c !important;
+      display: flex;
+      align-items: center;
+    }
+    .navbar-brand img {
+      margin-right: 10px;
+    }
+    .brand-text {
+      line-height: 1.2;
+    }
     .nav-link { font-weight: 500; color: #1e2b3c !important; transition: color 0.3s; }
     .nav-link:hover { color: #4361ee !important; }
     .nav-link.active { color: #4361ee !important; font-weight: 600; }
@@ -151,9 +162,9 @@
   <nav class="navbar navbar-expand-lg navbar-light sticky-top" id="navbarNav">
     <div class="container">
       <a class="navbar-brand fw-bold" href="index.html">
-  <img src="assets/logo buma.webp buma.webp" alt="BUMA Bantul" height="30" class="d-inline-block align-text-top me-2">
-  BUMA Bantul
-</a>
+        <img src="assets/logo buma.webp" alt="BUMA Bantul" height="40">
+        <span class="brand-text">BUMA PC GP Ansor<br>Kabupaten Bantul</span>
+      </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -185,7 +196,7 @@
   <!-- Hero -->
   <section id="hero" class="hero text-center">
     <div class="container">
-      <h1 class="display-4 fw-bold">Selamat Datang di BUMA Bantul</h1>
+      <h1 class="display-4 fw-bold">Selamat Datang di BUMA PC GP Ansor Kabupaten Bantul</h1>
       <p class="lead mb-4">Badan Usaha Milik Ansor Kabupaten Bantul<br>Mendorong kemandirian ekonomi anggota melalui pendataan dan pengembangan usaha yang terintegrasi.</p>
       <a href="pendataan.html" class="btn btn-primary btn-lg px-4 me-2">Isi Data Usaha</a>
       <a id="heroLoginBtn" href="login.html" class="btn btn-outline-light btn-lg px-4">Login Admin/Member</a>
